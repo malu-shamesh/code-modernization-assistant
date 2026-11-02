@@ -1,0 +1,48 @@
+# Keep the build context small and free of local state. The build itself needs only
+# pyproject.toml, README.md, LICENSE and src/ (see the Dockerfile). src/ must stay whole: the
+# f77rt runtime and the packaged pricing table live inside it as package data.
+
+# Version control and editor state
+.git
+.gitignore
+.gitattributes
+.idea
+.vscode
+
+# Local environments and secrets
+.venv
+venv
+env
+.env
+.env.*
+*.pem
+*.key
+credentials*.json
+
+# Caches and bytecode
+**/__pycache__
+**/*.pyc
+**/*.pyo
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.coverage
+htmlcov
+
+# Not needed in the image (the Fortran benchmark modules and their reference ports are evaluation
+# inputs, not runtime files)
+tests
+benchmarks
+deploy
+docs
+
+# Build output and logs
+dist
+build
+*.egg-info
+**/*.egg-info
+*.log
+
+# Markdown documentation, except the README that pyproject.toml declares as the package readme
+*.md
+!README.md
