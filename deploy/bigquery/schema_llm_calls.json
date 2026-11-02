@@ -1,0 +1,12 @@
+[
+  {"name": "run_id", "type": "STRING", "mode": "REQUIRED", "description": "Identifier of the pipeline run"},
+  {"name": "timestamp", "type": "TIMESTAMP", "mode": "REQUIRED", "description": "UTC time of the call"},
+  {"name": "module", "type": "STRING", "mode": "NULLABLE", "description": "Module the call was made for"},
+  {"name": "stage", "type": "STRING", "mode": "NULLABLE", "description": "convert, repair, test_gen ..."},
+  {"name": "model", "type": "STRING", "mode": "REQUIRED", "description": "Model id"},
+  {"name": "tier", "type": "STRING", "mode": "REQUIRED", "description": "frontier or open"},
+  {"name": "input_tokens", "type": "INTEGER", "mode": "REQUIRED", "description": "Prompt tokens"},
+  {"name": "output_tokens", "type": "INTEGER", "mode": "REQUIRED", "description": "Completion tokens"},
+  {"name": "cost_usd", "type": "FLOAT", "mode": "NULLABLE", "description": "Estimated cost of the call"},
+  {"name": "latency_s", "type": "FLOAT", "mode": "NULLABLE", "description": "Call latency in seconds"}
+]
