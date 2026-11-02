@@ -1,0 +1,114 @@
+C     SCRWRK - ONE SCRATCH WORKSPACE SEEN AS VECTOR, MATRIX AND TAIL
+C
+C     WORKSPACE W(24) IS HELD IN COMMON /SCRWRK/.  EACH ROUTINE LAYS
+C     THREE NAMES OVER IT WITH EQUIVALENCE (ALL DOUBLE PRECISION):
+C        V(16)   W(1..16)  THE VECTOR VIEW
+C        A(4,4)  W(1..16)  THE SAME STORAGE AS A 4 BY 4 MATRIX
+C        T(8)    W(17..24) A SEPARATE TAIL USED TO PARK A COLUMN
+C     BECAUSE STORAGE IS SHARED, A(I,J) IS V(I + 4*(J-1)).
+C
+      SUBROUTINE SCLEAR
+      DOUBLE PRECISION W(24)
+      COMMON /SCRWRK/ W
+      DO 10 I = 1, 24
+         W(I) = 0.0D0
+   10 CONTINUE
+      RETURN
+      END
+C
+C     COPY X(1..N) INTO THE VECTOR VIEW (AT MOST 16 ELEMENTS)
+      SUBROUTINE SVSET(N, X)
+      INTEGER N
+      DOUBLE PRECISION X(*)
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8)
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      NN = MIN0(N, 16)
+      DO 10 I = 1, NN
+         V(I) = X(I)
+   10 CONTINUE
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION SVGET(K)
+      INTEGER K
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8)
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      SVGET = V(K)
+      RETURN
+      END
+C
+      SUBROUTINE SMSET(I, J, VAL)
+      INTEGER I, J
+      DOUBLE PRECISION VAL
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8)
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      A(I,J) = VAL
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION SMGET(I, J)
+      INTEGER I, J
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8)
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      SMGET = A(I,J)
+      RETURN
+      END
+C
+C     SUM OF THE LEADING N BY N BLOCK OF THE MATRIX VIEW
+      DOUBLE PRECISION FUNCTION SBLKSM(N)
+      INTEGER N
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8), S
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      S = 0.0D0
+      DO 10 J = 1, N
+         DO 10 I = 1, N
+            S = S + A(I,J)
+   10 CONTINUE
+      SBLKSM = S
+      RETURN
+      END
+C
+C     TRANSPOSE THE MATRIX VIEW IN PLACE
+      SUBROUTINE STRNSP
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8)
+      DOUBLE PRECISION TMP
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      DO 10 J = 2, 4
+         DO 10 I = 1, J - 1
+            TMP = A(I,J)
+            A(I,J) = A(J,I)
+            A(J,I) = TMP
+   10 CONTINUE
+      RETURN
+      END
+C
+C     PARK COLUMN J OF THE MATRIX IN THE TAIL, THEN ZERO THE COLUMN
+      SUBROUTINE SSTASH(J)
+      INTEGER J
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8)
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      DO 10 I = 1, 4
+         T(I) = A(I,J)
+         A(I,J) = 0.0D0
+   10 CONTINUE
+      RETURN
+      END
+C
+C     PUT THE PARKED COLUMN BACK INTO COLUMN J
+      SUBROUTINE SUNSTH(J)
+      INTEGER J
+      DOUBLE PRECISION W(24), A(4,4), V(16), T(8)
+      COMMON /SCRWRK/ W
+      EQUIVALENCE (W(1), A(1,1)), (W(1), V(1)), (W(17), T(1))
+      DO 10 I = 1, 4
+         A(I,J) = T(I)
+   10 CONTINUE
+      RETURN
+      END

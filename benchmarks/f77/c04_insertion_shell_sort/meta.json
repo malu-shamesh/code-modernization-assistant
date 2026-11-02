@@ -1,0 +1,6 @@
+{
+  "id": "c04_insertion_shell_sort",
+  "difficulty": "medium",
+  "features": ["fixed_form_source", "goto_unconditional", "do_labeled", "if_logical_single", "logical_dotted", "implicit_typing", "implicit_statement", "double_precision", "array_assumed_size", "integer_division", "intrinsic_specific", "intrinsic_semantics", "arg_output"],
+  "notes": "GOTO-built inner loops that must test the lower bound before subscripting, ISIGN-based direction, indirect stable sort and a Shell gap sequence driven by truncating division."
+}

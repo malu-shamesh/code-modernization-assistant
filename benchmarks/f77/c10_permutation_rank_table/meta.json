@@ -1,0 +1,6 @@
+{
+  "id": "c10_permutation_rank_table",
+  "difficulty": "hard",
+  "features": ["fixed_form_source", "block_data", "common_block", "data_statement", "array_custom_bounds", "goto_unconditional", "do_labeled", "integer_division", "intrinsic_semantics", "arg_output", "array_adjustable", "if_logical_single", "logical_dotted"],
+  "notes": "NXTPRM relies on the DO variable being 0 after the loop runs out (and keeping its value after an early exit); counters and the factorial table live in COMMON initialised by BLOCK DATA; PRMSKP needs MOD with a negative dividend."
+}

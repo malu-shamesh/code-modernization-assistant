@@ -1,0 +1,118 @@
+C     CIPHER - CAESAR AND VIGENERE LETTER SUBSTITUTION CIPHERS
+C
+C     CAESAR  SHIFT EVERY LETTER BY KEY POSITIONS (ANY SIGN, ANY SIZE)
+C     VIGENR  POLYALPHABETIC SHIFT, IDIR = +1 ENCRYPTS, -1 DECRYPTS
+C     LETFRQ  LETTER FREQUENCIES, CASE INSENSITIVE, IFREQ(1) IS FOR A
+C     MOSTFQ  INDEX OF THE MOST FREQUENT LETTER (FIRST ONE ON A TIE)
+C     CRACK   GUESS THE CAESAR KEY ASSUMING THE PLAIN TEXT HAS MOSTLY E
+C
+C     NON-LETTERS ARE COPIED UNCHANGED AND CASE IS PRESERVED.  RESULTS
+C     ARE CHARACTER*60, SO LONGER TEXT IS TRUNCATED.
+C
+      SUBROUTINE CAESAR(TEXT, KEY, RES)
+      CHARACTER*(*) TEXT
+      INTEGER KEY
+      CHARACTER*60 RES
+      INTEGER I, IC, K, N
+      RES = ' '
+      K = MOD(KEY, 26)
+      IF (K .LT. 0) K = K + 26
+      N = MIN(LEN(TEXT), 60)
+      DO 10 I = 1, N
+         IC = ICHAR(TEXT(I:I))
+         IF (IC .GE. 65 .AND. IC .LE. 90) THEN
+            IC = 65 + MOD(IC - 65 + K, 26)
+         ELSE IF (IC .GE. 97 .AND. IC .LE. 122) THEN
+            IC = 97 + MOD(IC - 97 + K, 26)
+         END IF
+         RES(I:I) = CHAR(IC)
+   10 CONTINUE
+      RETURN
+      END
+C
+C     ONLY THE LETTERS OF KEYWD COUNT (AT MOST 20 OF THEM) AND THE KEY
+C     POSITION ADVANCES ONLY ON LETTERS OF TEXT, NEVER ON OTHER SYMBOLS.
+C     A KEYWORD WITHOUT LETTERS LEAVES THE TEXT UNCHANGED.
+      SUBROUTINE VIGENR(TEXT, KEYWD, IDIR, RES)
+      CHARACTER*(*) TEXT, KEYWD
+      INTEGER IDIR
+      CHARACTER*60 RES
+      CHARACTER*26 UPALPH, LOALPH
+      PARAMETER (UPALPH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+      PARAMETER (LOALPH = 'abcdefghijklmnopqrstuvwxyz')
+      INTEGER KSHIFT(20)
+      INTEGER I, J, K, NK, IBASE
+      NK = 0
+      DO 20 I = 1, LEN(KEYWD)
+         K = INDEX(UPALPH, KEYWD(I:I))
+         IF (K .EQ. 0) K = INDEX(LOALPH, KEYWD(I:I))
+         IF (K .GT. 0 .AND. NK .LT. 20) THEN
+            NK = NK + 1
+            KSHIFT(NK) = K - 1
+         END IF
+   20 CONTINUE
+      RES = TEXT
+      IF (NK .EQ. 0) RETURN
+      J = 0
+      DO 30 I = 1, MIN(LEN(TEXT), 60)
+         K = INDEX(UPALPH, TEXT(I:I))
+         IBASE = 65
+         IF (K .EQ. 0) THEN
+            K = INDEX(LOALPH, TEXT(I:I))
+            IBASE = 97
+         END IF
+         IF (K .GT. 0) THEN
+            J = J + 1
+            IF (J .GT. NK) J = 1
+            K = MOD(K - 1 + IDIR * KSHIFT(J), 26)
+            IF (K .LT. 0) K = K + 26
+            RES(I:I) = CHAR(IBASE + K)
+         END IF
+   30 CONTINUE
+      RETURN
+      END
+C
+      SUBROUTINE LETFRQ(TEXT, IFREQ)
+      CHARACTER*(*) TEXT
+      INTEGER IFREQ(26)
+      INTEGER I, IC, K
+      DO 40 I = 1, 26
+         IFREQ(I) = 0
+   40 CONTINUE
+      DO 50 I = 1, LEN(TEXT)
+         IC = ICHAR(TEXT(I:I))
+         K = 0
+         IF (IC .GE. 65 .AND. IC .LE. 90) K = IC - 64
+         IF (IC .GE. 97 .AND. IC .LE. 122) K = IC - 96
+         IF (K .GT. 0) IFREQ(K) = IFREQ(K) + 1
+   50 CONTINUE
+      RETURN
+      END
+C
+      INTEGER FUNCTION MOSTFQ(IFREQ)
+      INTEGER IFREQ(*)
+      INTEGER I, IBEST
+      IBEST = 0
+      MOSTFQ = 0
+      DO 60 I = 1, 26
+         IF (IFREQ(I) .GT. IBEST) THEN
+            IBEST = IFREQ(I)
+            MOSTFQ = I
+         END IF
+   60 CONTINUE
+      RETURN
+      END
+C
+      SUBROUTINE CRACK(TEXT, KEY)
+      CHARACTER*(*) TEXT
+      INTEGER KEY
+      INTEGER IFREQ(26), M, MOSTFQ
+      CALL LETFRQ(TEXT, IFREQ)
+      M = MOSTFQ(IFREQ)
+      IF (M .EQ. 0) THEN
+         KEY = 0
+      ELSE
+         KEY = MOD(M - 5 + 26, 26)
+      END IF
+      RETURN
+      END

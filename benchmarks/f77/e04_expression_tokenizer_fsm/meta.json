@@ -1,0 +1,6 @@
+{
+  "id": "e04_expression_tokenizer_fsm",
+  "difficulty": "hard",
+  "features": ["goto_unconditional", "goto_computed", "character_star", "character_substring", "array_assumed_size", "arg_output", "logical_dotted", "if_logical_single", "fixed_form_source"],
+  "notes": "Lexer as a labelled state machine with jumps between shared exit blocks, computed GOTO that falls through on class 0, 1-based substring arithmetic and a CHARACTER*(*) line whose trailing blanks must be trimmed by hand."
+}

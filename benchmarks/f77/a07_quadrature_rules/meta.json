@@ -1,0 +1,21 @@
+{
+  "id": "a07_quadrature_rules",
+  "difficulty": "medium",
+  "features": [
+    "fixed_form_source",
+    "procedure_argument",
+    "external_intrinsic_stmt",
+    "arg_output",
+    "double_precision",
+    "exponent_literal_d",
+    "do_labeled",
+    "goto_unconditional",
+    "integer_division",
+    "intrinsic_semantics",
+    "intrinsic_specific",
+    "logical_dotted",
+    "if_logical_single",
+    "implicit_typing"
+  ],
+  "notes": "SIMPSN is a FUNCTION that modifies its dummy N (odd -> N+1), so the port must return (result, n) and QUADEX must unpack it; evenness is tested with 2*(N/2) .NE. N."
+}

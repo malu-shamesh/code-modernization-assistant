@@ -1,0 +1,89 @@
+C     ==================================================================
+C     NORMS  -  VECTOR NORMS AND PIVOT SEARCH FOR DENSE LINEAR ALGEBRA
+C
+C     DASUM   SUM OF ABSOLUTE VALUES (THE 1-NORM)
+C     IDAMAX  NUMBER OF THE FIRST ELEMENT OF LARGEST ABSOLUTE VALUE
+C     DNRM2   EUCLIDEAN NORM, SCALED SO THAT NO INTERMEDIATE SQUARE
+C             OVERFLOWS OR UNDERFLOWS
+C     DNRMI   MAXIMUM NORM
+C
+C     X IS STORED WITH STRIDE INCX.  ONLY POSITIVE STRIDES ARE LEGAL,
+C     OTHERWISE EVERY ROUTINE RETURNS ZERO.
+C     ==================================================================
+      DOUBLE PRECISION FUNCTION DASUM(N, DX, INCX)
+      INTEGER N, INCX
+      DOUBLE PRECISION DX(*)
+      DOUBLE PRECISION DTEMP
+C
+      DASUM = 0.0D0
+      DTEMP = 0.0D0
+      IF (N .LE. 0 .OR. INCX .LE. 0) RETURN
+      NINCX = N*INCX
+      DO 10 I = 1, NINCX, INCX
+         DTEMP = DTEMP + DABS(DX(I))
+   10 CONTINUE
+      DASUM = DTEMP
+      RETURN
+      END
+C
+      INTEGER FUNCTION IDAMAX(N, DX, INCX)
+C     RETURNS THE ELEMENT NUMBER 1..N, NOT THE STORAGE SUBSCRIPT.
+      INTEGER N, INCX
+      DOUBLE PRECISION DX(*)
+      DOUBLE PRECISION DMAX
+C
+      IDAMAX = 0
+      IF (N .LT. 1 .OR. INCX .LE. 0) RETURN
+      IDAMAX = 1
+      IF (N .EQ. 1) RETURN
+      IX = 1
+      DMAX = DABS(DX(1))
+      DO 10 I = 2, N
+         IX = IX + INCX
+         IF (DABS(DX(IX)) .GT. DMAX) THEN
+            IDAMAX = I
+            DMAX = DABS(DX(IX))
+         END IF
+   10 CONTINUE
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION DNRM2(N, DX, INCX)
+      INTEGER N, INCX
+      DOUBLE PRECISION DX(*)
+      DOUBLE PRECISION ZERO, ONE
+      PARAMETER (ZERO = 0.0D0, ONE = 1.0D0)
+      DOUBLE PRECISION ABSXI, SCALE, SSQ
+C
+      DNRM2 = ZERO
+      IF (N .LT. 1 .OR. INCX .LT. 1) RETURN
+C     SSQ IS KEPT RELATIVE TO SCALE: NORM = SCALE*SQRT(SSQ)
+      SCALE = ZERO
+      SSQ = ONE
+      DO 10 IX = 1, 1 + (N-1)*INCX, INCX
+         IF (DX(IX) .NE. ZERO) THEN
+            ABSXI = DABS(DX(IX))
+            IF (SCALE .LT. ABSXI) THEN
+               SSQ = ONE + SSQ*(SCALE/ABSXI)**2
+               SCALE = ABSXI
+            ELSE
+               SSQ = SSQ + (ABSXI/SCALE)**2
+            END IF
+         END IF
+   10 CONTINUE
+      DNRM2 = SCALE*DSQRT(SSQ)
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION DNRMI(N, DX, INCX)
+      INTEGER N, INCX
+      DOUBLE PRECISION DX(*)
+      INTEGER IDAMAX
+      EXTERNAL IDAMAX
+C
+      DNRMI = 0.0D0
+      K = IDAMAX(N, DX, INCX)
+      IF (K .EQ. 0) RETURN
+      DNRMI = DABS(DX(1 + (K-1)*INCX))
+      RETURN
+      END

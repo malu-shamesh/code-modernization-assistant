@@ -1,0 +1,16 @@
+{
+  "id": "a05_series_report",
+  "difficulty": "easy",
+  "features": [
+    "fixed_form_source",
+    "do_labeled",
+    "statement_function",
+    "implicit_typing",
+    "double_precision",
+    "exponent_literal_d",
+    "format_statement",
+    "io_formatted",
+    "integer_division"
+  ],
+  "notes": "PROGRAM output must match explicit FORMATs exactly (F10.6, F8.5, I6 with leading 1X); a statement function with an INTEGER type and a K*(K+1)/2 style truncating division."
+}

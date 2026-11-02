@@ -1,0 +1,18 @@
+{
+  "id": "a03_factorial_fibonacci",
+  "difficulty": "easy",
+  "features": [
+    "fixed_form_source",
+    "parameter_statement",
+    "if_logical_single",
+    "logical_dotted",
+    "do_labeled",
+    "double_precision",
+    "exponent_literal_d",
+    "intrinsic_specific",
+    "array_adjustable",
+    "integer_division",
+    "arg_output"
+  ],
+  "notes": "Zero-trip DO loops (N < 2), early RETURN sentinel values, and a binomial recurrence whose integer division is exact only if done after the product."
+}

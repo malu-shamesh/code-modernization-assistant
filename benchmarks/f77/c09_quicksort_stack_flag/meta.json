@@ -1,0 +1,6 @@
+{
+  "id": "c09_quicksort_stack_flag",
+  "difficulty": "hard",
+  "features": ["fixed_form_source", "alternate_return", "goto_computed", "goto_unconditional", "if_arithmetic", "equivalence", "array_custom_bounds", "integer_division", "intrinsic_specific", "arg_output", "array_adjustable", "do_labeled", "if_logical_single", "logical_dotted"],
+  "notes": "Unstructured quicksort: the stack pointer ISP is EQUIVALENCEd to ISTK(0) and used under both names, a computed GOTO picks the descending branch, arithmetic IF drives the Hoare scan, and RETURN 1 must surface as an alt-return int."
+}

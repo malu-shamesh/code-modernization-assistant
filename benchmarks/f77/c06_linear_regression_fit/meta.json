@@ -1,0 +1,6 @@
+{
+  "id": "c06_linear_regression_fit",
+  "difficulty": "medium",
+  "features": ["fixed_form_source", "real_kind_star", "exponent_literal_d", "parameter_statement", "intrinsic_specific", "external_intrinsic_stmt", "statement_function", "procedure_argument", "arg_output", "array_adjustable", "do_labeled", "logical_dotted"],
+  "notes": "Regression with several scalar outputs plus an EXTERNAL function argument, a statement function and a PARAMETER tolerance; early returns must leave zeroed outputs."
+}

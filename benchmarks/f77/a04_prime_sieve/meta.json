@@ -1,0 +1,16 @@
+{
+  "id": "a04_prime_sieve",
+  "difficulty": "easy",
+  "features": [
+    "fixed_form_source",
+    "logical_dotted",
+    "if_logical_single",
+    "do_labeled",
+    "goto_unconditional",
+    "intrinsic_semantics",
+    "intrinsic_specific",
+    "array_adjustable",
+    "arg_output"
+  ],
+  "notes": "GO TO the terminal statement of an outer DO, inner DO with a start of I*I and a step of I (often zero trips), LOGICAL arrays, and a local work array passed to SIEVE."
+}

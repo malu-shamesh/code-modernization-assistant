@@ -1,0 +1,104 @@
+C**********************************************************************
+C     QSORTX - ITERATIVE QUICKSORT FOR A REAL VECTOR
+C
+C     SORTS X(1..N) IN PLACE, ASCENDING (KFLAG = 1) OR DESCENDING
+C     (KFLAG = -1).  RECURSION IS REPLACED BY AN EXPLICIT STACK OF
+C     SEGMENT BOUNDS: THE LARGER PART IS PUSHED AND THE SMALLER ONE IS
+C     SORTED FIRST, SO THE DEPTH STAYS BELOW LOG2(N), WHICH IS AT MOST
+C     31 FOR A 32-BIT INTEGER N.
+C
+C     THE STACK IS ISTK(0:63).  ISTK(0) IS THE STACK POINTER ISP (THE
+C     TWO NAMES SHARE STORAGE THROUGH EQUIVALENCE) AND ENTRY ISP HOLDS
+C     THE SEGMENT BOUNDS ISTK(2*ISP-1), ISTK(2*ISP).  THE PUSH CODE
+C     SPELLS THE POINTER ISP, THE POP CODE SPELLS IT ISTK(0), AND
+C     CLEARING THE WHOLE ARRAY ALSO EMPTIES THE STACK.
+C
+C     N      NUMBER OF ELEMENTS
+C     X      VECTOR, SORTED IN PLACE
+C     KFLAG  +1 FOR ASCENDING ORDER, -1 FOR DESCENDING ORDER
+C     NDUP   (OUTPUT) NUMBER OF ADJACENT EQUAL PAIRS IN THE RESULT
+C     *      ALTERNATE RETURN 1 IS TAKEN WHEN N .LT. 1 OR ABS(KFLAG)
+C            IS NOT 1; X IS THEN UNCHANGED AND NDUP IS ZERO
+C**********************************************************************
+      SUBROUTINE QSORTX(N, X, KFLAG, NDUP, *)
+      INTEGER N, KFLAG, NDUP
+      REAL X(N)
+      INTEGER ISTK(0:63), ISP
+      INTEGER I, J, LO, HI, MID
+      REAL PIV, T
+      EQUIVALENCE (ISTK(0), ISP)
+C
+      NDUP = 0
+      IF (N .LT. 1) RETURN 1
+      IF (IABS(KFLAG) .NE. 1) RETURN 1
+      DO 5 I = 0, 63
+         ISTK(I) = 0
+    5 CONTINUE
+C     DESCENDING ORDER IS ASCENDING ORDER OF THE NEGATED VALUES
+C     (KFLAG + 3) / 2 IS 1 FOR KFLAG = -1 AND 2 FOR KFLAG = 1
+      GO TO (10, 20), (KFLAG + 3) / 2
+   10 DO 15 I = 1, N
+         X(I) = -X(I)
+   15 CONTINUE
+   20 LO = 1
+      HI = N
+C     CURRENT SEGMENT LO..HI; ONE ELEMENT NEEDS NO WORK
+   30 IF (HI .LE. LO) GO TO 80
+C     MEDIAN OF THREE LEAVES X(LO) .LE. X(MID) .LE. X(HI)
+      MID = (LO + HI) / 2
+      IF (X(LO) .GT. X(MID)) THEN
+         T = X(LO)
+         X(LO) = X(MID)
+         X(MID) = T
+      END IF
+      IF (X(MID) .GT. X(HI)) THEN
+         T = X(MID)
+         X(MID) = X(HI)
+         X(HI) = T
+         IF (X(LO) .GT. X(MID)) THEN
+            T = X(LO)
+            X(LO) = X(MID)
+            X(MID) = T
+         END IF
+      END IF
+      PIV = X(MID)
+C     HOARE PARTITION; ARITHMETIC IF: NEGATIVE, ZERO, POSITIVE
+      I = LO - 1
+      J = HI + 1
+   40 I = I + 1
+      IF (X(I) - PIV) 40, 50, 50
+   50 J = J - 1
+      IF (X(J) - PIV) 60, 60, 50
+   60 IF (I .GE. J) GO TO 70
+      T = X(I)
+      X(I) = X(J)
+      X(J) = T
+      GO TO 40
+C     PARTS ARE LO..J AND J+1..HI: PUSH THE LARGER, KEEP THE SMALLER
+   70 IF (J - LO .GT. HI - J - 1) GO TO 75
+      ISP = ISP + 1
+      ISTK(2*ISP-1) = J + 1
+      ISTK(2*ISP) = HI
+      HI = J
+      GO TO 30
+   75 ISP = ISP + 1
+      ISTK(2*ISP-1) = LO
+      ISTK(2*ISP) = J
+      LO = J + 1
+      GO TO 30
+C     POP THE NEXT SEGMENT, IF ANY
+   80 IF (ISTK(0) .EQ. 0) GO TO 90
+      LO = ISTK(2*ISTK(0)-1)
+      HI = ISTK(2*ISTK(0))
+      ISTK(0) = ISTK(0) - 1
+      GO TO 30
+C     SORTED: RESTORE THE SIGN FOR DESCENDING ORDER, COUNT DUPLICATES
+   90 IF (KFLAG .GT. 0) GO TO 100
+      DO 95 I = 1, N
+         X(I) = -X(I)
+   95 CONTINUE
+  100 DO 110 I = 2, N
+         IF (X(I) .EQ. X(I-1)) NDUP = NDUP + 1
+  110 CONTINUE
+      RETURN
+      END

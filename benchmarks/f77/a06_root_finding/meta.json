@@ -1,0 +1,20 @@
+{
+  "id": "a06_root_finding",
+  "difficulty": "medium",
+  "features": [
+    "fixed_form_source",
+    "procedure_argument",
+    "external_intrinsic_stmt",
+    "alternate_return",
+    "arg_output",
+    "double_precision",
+    "exponent_literal_d",
+    "intrinsic_specific",
+    "intrinsic_semantics",
+    "do_labeled",
+    "goto_unconditional",
+    "logical_dotted",
+    "if_logical_single"
+  ],
+  "notes": "EXTERNAL function arguments, an alternate RETURN 1 with a * dummy, and a DO variable that is also an output (NIT) whose value after normal completion is fixed up to MAXIT."
+}

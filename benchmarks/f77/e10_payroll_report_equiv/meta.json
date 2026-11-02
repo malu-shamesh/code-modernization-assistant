@@ -1,0 +1,6 @@
+{
+  "id": "e10_payroll_report_equiv",
+  "difficulty": "hard",
+  "features": ["format_statement", "io_formatted", "equivalence", "data_statement", "parameter_statement", "alternate_return", "goto_computed", "goto_unconditional", "if_arithmetic", "do_labeled", "stop_pause", "save_statement", "integer_division", "intrinsic_semantics", "intrinsic_specific", "array_multidim", "arg_output", "logical_dotted", "if_logical_single", "fixed_form_source"],
+  "notes": "PROGRAM with exact FORMAT output whose alternate-return label sits inside the DO loop; a flat DATA list aliased onto a 2 by 3 table by EQUIVALENCE, NINT half-away rounding and truncating dollars/cents split."
+}

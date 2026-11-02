@@ -1,0 +1,6 @@
+{
+  "id": "e05_bank_ledger_alt_returns",
+  "difficulty": "hard",
+  "features": ["alternate_return", "common_block", "goto_computed", "goto_unconditional", "if_arithmetic", "if_logical_single", "double_precision", "exponent_literal_d", "arg_output", "array_adjustable", "logical_dotted", "fixed_form_source"],
+  "notes": "Bank ledger in COMMON with two alternate returns consumed by CALL ... *label; the computed GOTO falls through to the reject block and the interest branch is an arithmetic IF."
+}

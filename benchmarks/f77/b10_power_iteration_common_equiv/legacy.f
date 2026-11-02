@@ -1,0 +1,149 @@
+C     ==================================================================
+C     PWRPK  -  POWER ITERATION FOR THE DOMINANT EIGENPAIR OF A
+C     COMMON /PWRCTL/ HOLDS THE LIMITS (MAXITS, TOLP), THE CALL
+C     STATISTICS (NCALLS, NITOT) AND THE ORDER OF THE LAST RUN (NLAST).
+C     COMMON /PWRWRK/ HOLDS TWO WORK VECTORS OF LENGTH 100
+C        V   UNIT VECTOR OF THE LAST SWEEP
+C        W   A*V
+C     THE RESIDUAL R = A*V - EIGVAL*V IS EQUIVALENCED ONTO W, SO ANY
+C     LATER USE OF W DESTROYS R.
+C     ==================================================================
+      BLOCK DATA PWRBD
+      INTEGER MAXITS, NCALLS, NITOT, NLAST
+      DOUBLE PRECISION TOLP, V(100), W(100)
+      COMMON /PWRCTL/ MAXITS, TOLP, NCALLS, NITOT, NLAST
+      COMMON /PWRWRK/ V, W
+      DATA MAXITS /50/, TOLP /1.0D-10/
+      DATA NCALLS /0/, NITOT /0/, NLAST /0/
+      DATA V /100*0.0D0/, W /100*0.0D0/
+      END
+C
+      SUBROUTINE PWRCFG(MAXIT, TOL)
+      INTEGER MAXIT
+      DOUBLE PRECISION TOL
+      INTEGER MAXITS, NCALLS, NITOT, NLAST
+      DOUBLE PRECISION TOLP
+      COMMON /PWRCTL/ MAXITS, TOLP, NCALLS, NITOT, NLAST
+C
+      IF (MAXIT .GT. 0) MAXITS = MAXIT
+      IF (TOL .GT. 0.0D0) TOLP = TOL
+      RETURN
+      END
+C
+      SUBROUTINE PWRITR(A, LDA, N, X0, EIGVAL, ITERS, IERR)
+      INTEGER LDA, N, ITERS, IERR
+      DOUBLE PRECISION A(LDA,*), X0(*), EIGVAL
+      INTEGER MAXITS, NCALLS, NITOT, NLAST
+      DOUBLE PRECISION TOLP, V(100), W(100), R(100)
+      COMMON /PWRCTL/ MAXITS, TOLP, NCALLS, NITOT, NLAST
+      COMMON /PWRWRK/ V, W
+      EQUIVALENCE (W(1), R(1))
+      DOUBLE PRECISION EIGOLD, S, WN
+      INTEGER I, J, K
+C
+      NCALLS = NCALLS + 1
+      EIGVAL = 0.0D0
+      ITERS = 0
+      IERR = 0
+      IF (N .LT. 1 .OR. N .GT. 100 .OR. LDA .LT. N) THEN
+         IERR = 2
+         RETURN
+      END IF
+      S = 0.0D0
+      DO 10 I = 1, N
+         S = S + X0(I)*X0(I)
+   10 CONTINUE
+      IF (S .EQ. 0.0D0) THEN
+         IERR = 3
+         RETURN
+      END IF
+      DO 20 I = 1, N
+         V(I) = X0(I)/DSQRT(S)
+   20 CONTINUE
+      NLAST = N
+      EIGOLD = 0.0D0
+      DO 100 K = 1, MAXITS
+         DO 30 I = 1, N
+            W(I) = 0.0D0
+   30    CONTINUE
+         DO 50 J = 1, N
+            DO 40 I = 1, N
+               W(I) = W(I) + A(I,J)*V(J)
+   40       CONTINUE
+   50    CONTINUE
+C        RAYLEIGH QUOTIENT OF THE UNIT VECTOR V, AND THE NORM OF W
+         EIGVAL = 0.0D0
+         S = 0.0D0
+         DO 60 I = 1, N
+            EIGVAL = EIGVAL + V(I)*W(I)
+            S = S + W(I)*W(I)
+   60    CONTINUE
+         WN = DSQRT(S)
+         IF (WN .EQ. 0.0D0) GO TO 200
+         IF (DABS(EIGVAL-EIGOLD) .LE.
+     +       TOLP*DMAX1(1.0D0,DABS(EIGVAL))) GO TO 200
+C        NEXT VECTOR; ON THE LAST SWEEP V IS KEPT CONSISTENT WITH W
+         IF (K .LT. MAXITS) THEN
+            DO 70 I = 1, N
+               V(I) = W(I)/WN
+   70       CONTINUE
+            EIGOLD = EIGVAL
+         END IF
+  100 CONTINUE
+      IERR = 1
+      ITERS = MAXITS
+      GO TO 300
+  200 CONTINUE
+      ITERS = K
+C     THE RESIDUAL REPLACES W IN PLACE
+  300 CONTINUE
+      DO 80 I = 1, N
+         R(I) = W(I) - EIGVAL*V(I)
+   80 CONTINUE
+      NITOT = NITOT + ITERS
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION PWRGET(WHICH, I)
+C     WHICH = 1: V(I)   2: R(I)   3: NCALLS   4: NITOT   ELSE ZERO.
+      INTEGER WHICH, I
+      INTEGER MAXITS, NCALLS, NITOT, NLAST
+      DOUBLE PRECISION TOLP, V(100), W(100), R(100)
+      COMMON /PWRCTL/ MAXITS, TOLP, NCALLS, NITOT, NLAST
+      COMMON /PWRWRK/ V, W
+      EQUIVALENCE (W(1), R(1))
+C
+      PWRGET = 0.0D0
+      IF (WHICH .EQ. 3) PWRGET = NCALLS
+      IF (WHICH .EQ. 4) PWRGET = NITOT
+      IF (I .LT. 1 .OR. I .GT. NLAST) RETURN
+      IF (WHICH .EQ. 1) PWRGET = V(I)
+      IF (WHICH .EQ. 2) PWRGET = R(I)
+      RETURN
+      END
+C
+      DOUBLE PRECISION FUNCTION PWRRQ(A, LDA, N)
+C     RAYLEIGH QUOTIENT OF THE STORED V WITH A; W IS SCRATCH SPACE.
+      INTEGER LDA, N
+      DOUBLE PRECISION A(LDA,*)
+      INTEGER MAXITS, NCALLS, NITOT, NLAST
+      DOUBLE PRECISION TOLP, V(100), W(100)
+      COMMON /PWRCTL/ MAXITS, TOLP, NCALLS, NITOT, NLAST
+      COMMON /PWRWRK/ V, W
+      INTEGER I, J
+C
+      PWRRQ = 0.0D0
+      IF (N .NE. NLAST .OR. LDA .LT. N) RETURN
+      DO 10 I = 1, N
+         W(I) = 0.0D0
+   10 CONTINUE
+      DO 30 J = 1, N
+         DO 20 I = 1, N
+            W(I) = W(I) + A(I,J)*V(J)
+   20    CONTINUE
+   30 CONTINUE
+      DO 40 I = 1, N
+         PWRRQ = PWRRQ + V(I)*W(I)
+   40 CONTINUE
+      RETURN
+      END

@@ -1,0 +1,6 @@
+{
+  "id": "c08_cumsum_merge_sorted",
+  "difficulty": "medium",
+  "features": ["fixed_form_source", "sequence_association", "array_multidim", "array_adjustable", "array_assumed_size", "do_shared_terminal", "do_labeled", "goto_unconditional", "implicit_typing", "arg_output", "if_logical_single", "logical_dotted"],
+  "notes": "Array elements A(I) and C(K) are passed as sub-array starts to RCOPY, CUMCOL uses a leading dimension with two DO loops sharing one terminal label, and the merge must not read past NA or NB."
+}

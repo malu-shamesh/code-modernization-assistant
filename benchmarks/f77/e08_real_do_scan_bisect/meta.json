@@ -1,0 +1,6 @@
+{
+  "id": "e08_real_do_scan_bisect",
+  "difficulty": "hard",
+  "features": ["do_real_index", "do_labeled", "alternate_return", "procedure_argument", "external_intrinsic_stmt", "if_arithmetic", "goto_unconditional", "double_precision", "exponent_literal_d", "intrinsic_semantics", "intrinsic_specific", "arg_output", "logical_dotted", "if_logical_single", "fixed_form_source"],
+  "notes": "REAL DO variable with a truncated trip count (zero trips and normal exit leave it past the limit), arithmetic IF on a product, and bisection and fixed-point loops with several jump exits and two alternate returns."
+}

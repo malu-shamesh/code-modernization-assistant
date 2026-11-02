@@ -1,0 +1,64 @@
+C     SERIES SUMMATION ROUTINES AND A SMALL REPORT PROGRAM
+C
+C     HARMON - HARMONIC SUM 1 + 1/2 + ... + 1/N  (0 FOR N < 1)
+      DOUBLE PRECISION FUNCTION HARMON(N)
+      INTEGER N
+      DOUBLE PRECISION S
+      S = 0.0D0
+      DO 10 K = 1, N
+         S = S + 1.0D0/DBLE(K)
+   10 CONTINUE
+      HARMON = S
+      RETURN
+      END
+C
+C     ISUMSQ - 1**2 + 2**2 + ... + N**2 BY DIRECT SUMMATION
+      INTEGER FUNCTION ISUMSQ(N)
+      INTEGER N, K, J, S, SQR
+C     STATEMENT FUNCTION: SQUARE OF AN INTEGER
+      SQR(J) = J*J
+      S = 0
+      DO 20 K = 1, N
+         S = S + SQR(K)
+   20 CONTINUE
+      ISUMSQ = S
+      RETURN
+      END
+C
+C     GEOSUM - FIRST N TERMS OF A + A*R + A*R**2 + ...
+      DOUBLE PRECISION FUNCTION GEOSUM(A, R, N)
+      DOUBLE PRECISION A, R, T, S
+      INTEGER N
+      S = 0.0D0
+      T = A
+      DO 30 K = 1, N
+         S = S + T
+         T = T*R
+   30 CONTINUE
+      GEOSUM = S
+      RETURN
+      END
+C
+C     ISUMMU - SUM OF THE POSITIVE MULTIPLES OF M THAT ARE <= N,
+C     USING M*(1 + 2 + ... + K) WITH K = N/M (TRUNCATED)
+      INTEGER FUNCTION ISUMMU(N, M)
+      INTEGER N, M, K
+      K = N/M
+      ISUMMU = M*K*(K + 1)/2
+      RETURN
+      END
+C
+C     SERTAB - PRINT A SHORT TABLE OF THE ABOVE
+      PROGRAM SERTAB
+      INTEGER N
+      DOUBLE PRECISION HARMON, GEOSUM
+      WRITE (6, 100)
+      DO 40 N = 1, 5
+         WRITE (6, 110) N, HARMON(N), ISUMSQ(N),
+     &                  GEOSUM(0.5D0, 0.5D0, N)
+   40 CONTINUE
+      WRITE (6, 120) ISUMMU(100, 7)
+  100 FORMAT (1X, 'N', 5X, 'HARMONIC', 4X, 'SUMSQ', 4X, 'GEOM')
+  110 FORMAT (1X, I3, 3X, F10.6, 3X, I6, 3X, F8.5)
+  120 FORMAT (1X, 'MULTIPLES OF 7 UP TO 100: ', I5)
+      END

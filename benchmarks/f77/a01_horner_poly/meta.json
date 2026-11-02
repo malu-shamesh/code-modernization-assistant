@@ -1,0 +1,14 @@
+{
+  "id": "a01_horner_poly",
+  "difficulty": "easy",
+  "features": [
+    "fixed_form_source",
+    "double_precision",
+    "exponent_literal_d",
+    "do_labeled",
+    "array_assumed_size",
+    "arg_output",
+    "implicit_typing"
+  ],
+  "notes": "Descending DO loops (step -1) over ascending-power coefficients stored in an assumed-size array; scalar P/DP/REM outputs and an in-place Q array."
+}

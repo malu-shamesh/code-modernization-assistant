@@ -1,0 +1,6 @@
+{
+  "id": "d02_reverse_palindrome_check",
+  "difficulty": "easy",
+  "features": ["character_star", "character_substring", "do_labeled", "goto_unconditional", "if_logical_single", "logical_dotted", "arg_output", "fixed_form_source"],
+  "notes": "Reversal keeps leading blanks as trailing blanks and the palindrome test is a two-pointer GO TO loop that skips non-alphanumerics."
+}

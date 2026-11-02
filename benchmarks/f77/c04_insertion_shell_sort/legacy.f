@@ -1,0 +1,85 @@
+C**********************************************************************
+C     INSERTION SORT AND SHELL SORT
+C
+C     ISORT   INSERTION SORT OF AN INTEGER VECTOR, EITHER DIRECTION
+C     INSIDX  INDIRECT INSERTION SORT: ORDERS AN INDEX VECTOR AND
+C             LEAVES THE DATA UNTOUCHED (STABLE)
+C     SHSORT  SHELL SORT WITH KNUTH'S GAPS ..., 40, 13, 4, 1
+C
+C     ALL LOOPS TEST THE LOWER BOUND BEFORE THEY SUBSCRIPT THE ARRAY.
+C     FORTRAN 77 DOES NOT GUARANTEE SHORT-CIRCUIT EVALUATION OF
+C     .AND. / .OR., SO THE TWO TESTS ARE KEPT IN SEPARATE STATEMENTS.
+C**********************************************************************
+C
+C     ISORT - IDIR .GE. 0 SORTS ASCENDING, IDIR .LT. 0 DESCENDING.
+C     ISIGN(1, IDIR) IS +1 FOR IDIR = 0, SO ZERO MEANS ASCENDING.
+C
+      SUBROUTINE ISORT(N, IA, IDIR)
+      DIMENSION IA(*)
+      ISG = ISIGN(1, IDIR)
+      DO 30 I = 2, N
+         KEY = IA(I)
+         J = I - 1
+   10    IF (J .LT. 1) GO TO 20
+         IF (ISG * IA(J) .LE. ISG * KEY) GO TO 20
+         IA(J+1) = IA(J)
+         J = J - 1
+         GO TO 10
+   20    IA(J+1) = KEY
+   30 CONTINUE
+      RETURN
+      END
+C
+C     INSIDX - ON RETURN A(IDX(1)) .LE. A(IDX(2)) .LE. ... .LE.
+C     A(IDX(N)); EQUAL KEYS KEEP THEIR ORIGINAL RELATIVE ORDER.
+C
+      SUBROUTINE INSIDX(N, A, IDX)
+      INTEGER N, IDX(*)
+      REAL A(*)
+      INTEGER I, J, K
+      DO 5 I = 1, N
+         IDX(I) = I
+    5 CONTINUE
+      DO 30 I = 2, N
+         K = IDX(I)
+         J = I - 1
+   10    IF (J .LT. 1) GO TO 20
+         IF (A(IDX(J)) .LE. A(K)) GO TO 20
+         IDX(J+1) = IDX(J)
+         J = J - 1
+         GO TO 10
+   20    IDX(J+1) = K
+   30 CONTINUE
+      RETURN
+      END
+C
+C     SHSORT - SHELL SORT, ASCENDING.  NCMP COUNTS THE ELEMENT
+C     COMPARISONS.  THE START GAP IS THE SMALLEST 3*H+1 TERM THAT IS NOT
+C     BELOW N/3 (AT LEAST 1), AND EACH ROUND DIVIDES THE GAP BY 3 UNTIL
+C     IT REACHES 0.
+C     THE IMPLICIT STATEMENT MAKES A AND T DOUBLE PRECISION, WHILE THE
+C     INTEGERS N, NCMP, IGAP, I AND J KEEP THEIR I-N TYPE.
+C
+      SUBROUTINE SHSORT(N, A, NCMP)
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z)
+      DIMENSION A(*)
+      NCMP = 0
+      IGAP = 1
+   10 IF (IGAP .GE. N / 3) GO TO 20
+      IGAP = 3 * IGAP + 1
+      GO TO 10
+   20 IF (IGAP .LT. 1) RETURN
+      DO 50 I = IGAP + 1, N
+         T = A(I)
+         J = I
+   30    IF (J .LE. IGAP) GO TO 40
+         NCMP = NCMP + 1
+         IF (A(J - IGAP) .LE. T) GO TO 40
+         A(J) = A(J - IGAP)
+         J = J - IGAP
+         GO TO 30
+   40    A(J) = T
+   50 CONTINUE
+      IGAP = IGAP / 3
+      GO TO 20
+      END

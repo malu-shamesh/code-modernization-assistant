@@ -1,0 +1,6 @@
+{
+  "id": "e09_number_scanner_block_data",
+  "difficulty": "hard",
+  "features": ["block_data", "common_block", "data_statement", "array_multidim", "character_star", "character_substring", "goto_unconditional", "do_labeled", "double_precision", "exponent_literal_d", "arg_output", "logical_dotted", "if_logical_single", "fixed_form_source"],
+  "notes": "Transition table initialised by BLOCK DATA with a column-major DATA list and repeat count, then walked with backward-jump loops; DATA order and 1-based substring indexing are the traps."
+}

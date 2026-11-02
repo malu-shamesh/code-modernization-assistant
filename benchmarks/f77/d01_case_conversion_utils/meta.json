@@ -1,0 +1,6 @@
+{
+  "id": "d01_case_conversion_utils",
+  "difficulty": "easy",
+  "features": ["character_star", "character_substring", "do_labeled", "if_logical_single", "logical_dotted", "implicit_typing", "fixed_form_source", "arg_output"],
+  "notes": "ICHAR/CHAR case folding into a CHARACTER*40 result that must be truncated or blank padded; TITLEC uses implicitly typed loop variables."
+}

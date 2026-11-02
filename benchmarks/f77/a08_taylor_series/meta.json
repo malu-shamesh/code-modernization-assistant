@@ -1,0 +1,22 @@
+{
+  "id": "a08_taylor_series",
+  "difficulty": "medium",
+  "features": [
+    "fixed_form_source",
+    "double_precision",
+    "exponent_literal_d",
+    "parameter_statement",
+    "data_statement",
+    "do_labeled",
+    "do_real_index",
+    "goto_unconditional",
+    "intrinsic_semantics",
+    "intrinsic_specific",
+    "arg_output",
+    "array_assumed_size",
+    "logical_dotted",
+    "if_logical_single",
+    "save_statement"
+  ],
+  "notes": "REAL DO index with trip count INT((X1-X0+DX)/DX), DMOD keeping the dividend's sign, and NTERMS outputs that propagate through nested calls (TCOS -> TSIN)."
+}

@@ -1,0 +1,97 @@
+C     WORDS - WORD COUNTING AND EXTRACTION FOR FREE TEXT
+C
+C     A WORD IS A MAXIMAL RUN OF CHARACTERS THAT ARE NOT DELIMITERS.
+C     THE DELIMITERS ARE BLANK , . ; : ! ?   (A TAB IS NOT ONE).
+C
+C     WORDCT  NUMBER OF WORDS AND LENGTH OF THE LONGEST WORD
+C     GETWRD  THE K-TH WORD AND ITS TRUE LENGTH
+C     CNTSUB  NUMBER OF NON-OVERLAPPING OCCURRENCES OF A PATTERN
+C
+      SUBROUTINE WORDCT(TEXT, NWORDS, MAXLEN)
+      CHARACTER*(*) TEXT
+      INTEGER NWORDS, MAXLEN
+      CHARACTER*7 DELIM
+      LOGICAL INWORD
+      INTEGER I, CURLEN
+      DATA DELIM /' ,.;:!?'/
+      NWORDS = 0
+      MAXLEN = 0
+      CURLEN = 0
+      INWORD = .FALSE.
+      DO 10 I = 1, LEN(TEXT)
+         IF (INDEX(DELIM, TEXT(I:I)) .GT. 0) THEN
+            INWORD = .FALSE.
+            CURLEN = 0
+         ELSE
+            IF (.NOT. INWORD) THEN
+               INWORD = .TRUE.
+               NWORDS = NWORDS + 1
+            END IF
+            CURLEN = CURLEN + 1
+            IF (CURLEN .GT. MAXLEN) MAXLEN = CURLEN
+         END IF
+   10 CONTINUE
+      RETURN
+      END
+C
+C     WORD RECEIVES AT MOST 20 CHARACTERS OF THE K-TH WORD, WLEN IS ITS
+C     FULL LENGTH.  IF THERE IS NO K-TH WORD, WORD IS BLANK, WLEN IS 0.
+      SUBROUTINE GETWRD(TEXT, K, WORD, WLEN)
+      CHARACTER*(*) TEXT
+      INTEGER K, WLEN
+      CHARACTER*20 WORD
+      CHARACTER*7 DELIM
+      LOGICAL INWORD
+      INTEGER I, N, IS
+      DATA DELIM /' ,.;:!?'/
+      WORD = ' '
+      WLEN = 0
+      N = 0
+      INWORD = .FALSE.
+      DO 20 I = 1, LEN(TEXT)
+         IF (INDEX(DELIM, TEXT(I:I)) .GT. 0) THEN
+            IF (INWORD .AND. N .EQ. K) THEN
+               WORD = TEXT(IS:I-1)
+               WLEN = I - IS
+               RETURN
+            END IF
+            INWORD = .FALSE.
+         ELSE
+            IF (.NOT. INWORD) THEN
+               INWORD = .TRUE.
+               N = N + 1
+               IS = I
+            END IF
+         END IF
+   20 CONTINUE
+C     A WORD RUNNING TO THE END OF TEXT HAS NO CLOSING DELIMITER
+      IF (INWORD .AND. N .EQ. K) THEN
+         WORD = TEXT(IS:LEN(TEXT))
+         WLEN = LEN(TEXT) - IS + 1
+      END IF
+      RETURN
+      END
+C
+      INTEGER FUNCTION CNTSUB(TEXT, PAT)
+      CHARACTER*(*) TEXT, PAT
+      INTEGER I, NP, POS, K, NCNT
+C     LENGTH OF PAT WITHOUT ITS TRAILING BLANKS
+      NP = 0
+      DO 30 I = LEN(PAT), 1, -1
+         IF (PAT(I:I) .NE. ' ') THEN
+            NP = I
+            GO TO 35
+         END IF
+   30 CONTINUE
+   35 NCNT = 0
+      IF (NP .EQ. 0) GO TO 60
+      POS = 1
+   40 IF (POS + NP - 1 .GT. LEN(TEXT)) GO TO 60
+      K = INDEX(TEXT(POS:), PAT(1:NP))
+      IF (K .EQ. 0) GO TO 60
+      NCNT = NCNT + 1
+      POS = POS + K - 1 + NP
+      GO TO 40
+   60 CNTSUB = NCNT
+      RETURN
+      END

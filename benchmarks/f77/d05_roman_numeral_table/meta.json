@@ -1,0 +1,6 @@
+{
+  "id": "d05_roman_numeral_table",
+  "difficulty": "medium",
+  "features": ["data_statement", "integer_division", "intrinsic_semantics", "character_star", "character_substring", "arg_output", "do_labeled", "goto_unconditional", "logical_dotted", "format_statement", "io_formatted", "fixed_form_source", "if_logical_single", "save_statement"],
+  "notes": "Numeral symbols are CHARACTER*2 table entries trimmed by substring; parsing validates by converting back and comparing blank-padded strings; PRTROM relies on DO trip counts with negative steps."
+}

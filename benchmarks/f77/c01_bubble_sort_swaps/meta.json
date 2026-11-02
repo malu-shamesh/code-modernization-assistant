@@ -1,0 +1,6 @@
+{
+  "id": "c01_bubble_sort_swaps",
+  "difficulty": "easy",
+  "features": ["fixed_form_source", "array_adjustable", "arg_output", "do_labeled", "goto_unconditional", "if_logical_single", "logical_dotted"],
+  "notes": "Bubble sort whose last-swap position shrinks the pass bound; DO loops with zero trips and a jump to the loop terminal label."
+}

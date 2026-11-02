@@ -1,0 +1,6 @@
+{
+  "id": "e06_assigned_goto_local_routines",
+  "difficulty": "hard",
+  "features": ["goto_assigned", "goto_unconditional", "if_logical_single", "arg_output", "array_adjustable", "logical_dotted", "fixed_form_source"],
+  "notes": "Shared code blocks entered with ASSIGN label TO IRET / GO TO block and left with an assigned GOTO to one of two call sites, including a block that also runs after the main loop ends."
+}

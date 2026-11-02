@@ -1,0 +1,6 @@
+{
+  "id": "c05_median_percentile_rank",
+  "difficulty": "medium",
+  "features": ["fixed_form_source", "statement_function", "intrinsic_semantics", "intrinsic_specific", "integer_division", "array_adjustable", "goto_unconditional", "do_labeled", "if_logical_single", "logical_dotted", "arg_output"],
+  "notes": "NINT rounds half away from zero (not to even), MOD and truncating division pick the middle element, a statement function closes over N, and tie groups get average ranks."
+}

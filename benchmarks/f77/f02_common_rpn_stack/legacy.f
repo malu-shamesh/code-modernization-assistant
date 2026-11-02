@@ -1,0 +1,102 @@
+C     STKRPN - INTEGER STACK CALCULATOR (REVERSE POLISH NOTATION)
+C
+C     THE STACK LIVES IN COMMON /STKCOM/ AND IS SHARED BY STKCLR,
+C     STKPSH, STKPOP, STKDEP AND THE EVALUATOR STKRPN.  EVERY ROUTINE
+C     REPEATS THE SAME COMMON DECLARATION.
+C
+C     ERROR CODES (IERR):  0 OK            1 STACK OVERFLOW
+C                          2 UNDERFLOW     3 DIVISION BY ZERO
+C                          4 BAD FINAL DEPTH   5 UNKNOWN OPERATOR
+C
+      SUBROUTINE STKCLR
+      PARAMETER (MAXD = 8)
+      INTEGER ISTK(MAXD), ITOP
+      COMMON /STKCOM/ ISTK, ITOP
+      ITOP = 0
+      RETURN
+      END
+C
+      SUBROUTINE STKPSH(IVAL, IERR)
+      PARAMETER (MAXD = 8)
+      INTEGER IVAL, IERR
+      INTEGER ISTK(MAXD), ITOP
+      COMMON /STKCOM/ ISTK, ITOP
+      IERR = 0
+      IF (ITOP .GE. MAXD) THEN
+         IERR = 1
+         RETURN
+      END IF
+      ITOP = ITOP + 1
+      ISTK(ITOP) = IVAL
+      RETURN
+      END
+C
+      SUBROUTINE STKPOP(IVAL, IERR)
+      PARAMETER (MAXD = 8)
+      INTEGER IVAL, IERR
+      INTEGER ISTK(MAXD), ITOP
+      COMMON /STKCOM/ ISTK, ITOP
+      IERR = 0
+      IVAL = 0
+      IF (ITOP .LE. 0) THEN
+         IERR = 2
+         RETURN
+      END IF
+      IVAL = ISTK(ITOP)
+      ITOP = ITOP - 1
+      RETURN
+      END
+C
+      INTEGER FUNCTION STKDEP()
+      PARAMETER (MAXD = 8)
+      INTEGER ISTK(MAXD), ITOP
+      COMMON /STKCOM/ ISTK, ITOP
+      STKDEP = ITOP
+      RETURN
+      END
+C
+C     EVALUATE THE POSTFIX TOKEN LIST ITOK(1..N).  A TOKEN .GE. 0 IS
+C     AN OPERAND, -1 IS +, -2 IS -, -3 IS *, -4 IS / AND -5 IS MOD.
+      SUBROUTINE STKRPN(N, ITOK, IRES, IERR)
+      INTEGER N, ITOK(*), IRES, IERR
+      INTEGER STKDEP
+      INTEGER IA, IB, K
+      CALL STKCLR
+      IRES = 0
+      IERR = 0
+      DO 100 I = 1, N
+         IF (ITOK(I) .LT. 0) GO TO 20
+         CALL STKPSH(ITOK(I), IERR)
+         IF (IERR .NE. 0) RETURN
+         GO TO 100
+   20    K = -ITOK(I)
+         CALL STKPOP(IB, IERR)
+         IF (IERR .NE. 0) RETURN
+         CALL STKPOP(IA, IERR)
+         IF (IERR .NE. 0) RETURN
+         GO TO (31, 32, 33, 34, 35), K
+         IERR = 5
+         RETURN
+   31    IA = IA + IB
+         GO TO 40
+   32    IA = IA - IB
+         GO TO 40
+   33    IA = IA * IB
+         GO TO 40
+   34    IF (IB .EQ. 0) GO TO 90
+         IA = IA / IB
+         GO TO 40
+   35    IF (IB .EQ. 0) GO TO 90
+         IA = MOD(IA, IB)
+   40    CALL STKPSH(IA, IERR)
+         IF (IERR .NE. 0) RETURN
+  100 CONTINUE
+      IF (STKDEP() .NE. 1) THEN
+         IERR = 4
+      ELSE
+         CALL STKPOP(IRES, IERR)
+      END IF
+      RETURN
+   90 IERR = 3
+      RETURN
+      END

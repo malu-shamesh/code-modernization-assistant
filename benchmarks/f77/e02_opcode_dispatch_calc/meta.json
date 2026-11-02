@@ -1,0 +1,6 @@
+{
+  "id": "e02_opcode_dispatch_calc",
+  "difficulty": "medium",
+  "features": ["goto_computed", "goto_unconditional", "if_arithmetic", "if_logical_single", "do_labeled", "array_assumed_size", "array_adjustable", "arg_output", "logical_dotted", "fixed_form_source"],
+  "notes": "Computed GOTO falls through for out-of-range selectors and arithmetic IF three-way branches; the accumulator keeps its partial value when an error return is taken."
+}

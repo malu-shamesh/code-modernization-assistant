@@ -1,0 +1,6 @@
+{
+  "id": "d08_paged_inventory_report",
+  "difficulty": "hard",
+  "features": ["block_data", "common_block", "hollerith", "format_statement", "io_formatted", "array_adjustable", "array_multidim", "array_assumed_size", "character_star", "character_substring", "do_labeled", "logical_dotted", "fixed_form_source", "data_statement"],
+  "notes": "Page state shared through COMMON and a BLOCK DATA; right-justified A fields, asterisk overflow in F and I, E12.4, format reversion to the last group, an A(LDA,*) dummy, and the DO variable read after the loop in the PROGRAM."
+}

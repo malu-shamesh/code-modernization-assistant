@@ -1,0 +1,6 @@
+{
+  "id": "d06_number_to_english_words",
+  "difficulty": "medium",
+  "features": ["array_custom_bounds", "data_statement", "integer_division", "intrinsic_semantics", "intrinsic_specific", "character_star", "character_substring", "arg_output", "do_labeled", "goto_unconditional", "if_logical_single", "logical_dotted", "fixed_form_source", "save_statement"],
+  "notes": "Word tables with non-default bounds (ONES(0:19), TENS(2:9)), a GO TO to the DO terminal statement, and a buffer-appending helper with an in/out position argument."
+}

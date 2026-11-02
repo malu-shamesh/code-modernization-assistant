@@ -1,0 +1,6 @@
+{
+  "id": "e07_running_stats_entry_points",
+  "difficulty": "hard",
+  "features": ["entry_statement", "alternate_return", "save_statement", "data_statement", "goto_unconditional", "double_precision", "exponent_literal_d", "arg_output", "array_adjustable", "do_labeled", "if_logical_single", "logical_dotted", "fixed_form_source"],
+  "notes": "One program unit with four ENTRY points sharing SAVEd, DATA-initialised locals; each entry has its own argument list and two of them take an alternate return."
+}

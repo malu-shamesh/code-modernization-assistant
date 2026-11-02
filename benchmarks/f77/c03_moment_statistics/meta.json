@@ -1,0 +1,6 @@
+{
+  "id": "c03_moment_statistics",
+  "difficulty": "easy",
+  "features": ["fixed_form_source", "double_precision", "exponent_literal_d", "parameter_statement", "intrinsic_specific", "arg_output", "array_adjustable", "do_labeled", "if_logical_single", "logical_dotted"],
+  "notes": "Corrected two-pass variance with several scalar outputs returned in parameter order and early returns that leave defined zero outputs."
+}

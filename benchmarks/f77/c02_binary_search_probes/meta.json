@@ -1,0 +1,6 @@
+{
+  "id": "c02_binary_search_probes",
+  "difficulty": "easy",
+  "features": ["fixed_form_source", "array_assumed_size", "arg_output", "goto_unconditional", "if_logical_single", "implicit_typing", "integer_division", "logical_dotted"],
+  "notes": "Binary search with a probe counter output, a negative insertion-point result and a lower-bound variant; 1-based midpoint arithmetic."
+}

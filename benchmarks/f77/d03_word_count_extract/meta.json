@@ -1,0 +1,6 @@
+{
+  "id": "d03_word_count_extract",
+  "difficulty": "medium",
+  "features": ["character_star", "character_substring", "data_statement", "do_labeled", "goto_unconditional", "logical_dotted", "arg_output", "fixed_form_source", "if_logical_single", "save_statement"],
+  "notes": "Word scanning with an in-word flag; the last word has no closing delimiter and the extracted word is truncated to 20 characters while its length stays true."
+}

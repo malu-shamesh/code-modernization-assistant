@@ -1,0 +1,6 @@
+{
+  "id": "d09_justify_sort_squeeze",
+  "difficulty": "hard",
+  "features": ["do_shared_terminal", "equivalence", "character_star", "character_substring", "arg_output", "array_assumed_size", "integer_division", "do_labeled", "logical_dotted", "fixed_form_source", "if_logical_single"],
+  "notes": "Blank-padded comparison (control characters sort below the pad blank), centring with truncating integer division, a bubble sort whose two DO loops share one terminal label, and a CHARACTER buffer aliased to a CHARACTER*1 array by EQUIVALENCE."
+}

@@ -1,0 +1,113 @@
+C     JULDAY - CALENDAR UTILITIES BASED ON THE JULIAN DAY NUMBER
+C
+C     JDN AND JDCAL USE THE INTEGER FORMULAS OF FLIEGEL AND VAN
+C     FLANDERN (1968).  THEY RELY ON FORTRAN INTEGER DIVISION
+C     TRUNCATING TOWARD ZERO: (IM-14)/12 IS 0 FOR MARCH TO DECEMBER
+C     AND -1 FOR JANUARY AND FEBRUARY.  THE NUMBER OF SUCCESSFUL
+C     CONVERSIONS IN EACH DIRECTION IS COUNTED IN COMMON /DCNT/.
+C
+      BLOCK DATA DCNTBD
+      COMMON /DCNT/ NFWD, NREV
+      DATA NFWD /0/, NREV /0/
+      END
+C
+      LOGICAL FUNCTION ISLEAP(IY)
+      INTEGER IY
+      ISLEAP = (MOD(IY, 4) .EQ. 0 .AND. MOD(IY, 100) .NE. 0)
+     &         .OR. MOD(IY, 400) .EQ. 0
+      RETURN
+      END
+C
+C     DAYS IN MONTH IM OF YEAR IY, 0 FOR AN INVALID MONTH
+      INTEGER FUNCTION MDAYS(IY, IM)
+      INTEGER IY, IM
+      INTEGER NDAY(12)
+      LOGICAL ISLEAP
+      SAVE NDAY
+      DATA NDAY /31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31/
+      MDAYS = 0
+      IF (IM .LT. 1 .OR. IM .GT. 12) RETURN
+      MDAYS = NDAY(IM)
+      IF (IM .EQ. 2 .AND. ISLEAP(IY)) MDAYS = 29
+      RETURN
+      END
+C
+C     JULIAN DAY NUMBER OF A GREGORIAN DATE (NOON-BASED INTEGER).
+C     IERR = 0 OK, 1 BAD MONTH, 2 BAD DAY; THE RESULT IS 0 ON ERROR.
+      INTEGER FUNCTION JDN(IY, IM, ID, IERR)
+      INTEGER IY, IM, ID, IERR, L, MDAYS
+      COMMON /DCNT/ NFWD, NREV
+      JDN = 0
+      IERR = 0
+      IF (IM .LT. 1 .OR. IM .GT. 12) GO TO 900
+      IF (ID .LT. 1 .OR. ID .GT. MDAYS(IY, IM)) GO TO 910
+      L = (IM - 14) / 12
+      JDN = ID - 32075 + 1461 * (IY + 4800 + L) / 4
+     &      + 367 * (IM - 2 - L * 12) / 12
+     &      - 3 * ((IY + 4900 + L) / 100) / 4
+      NFWD = NFWD + 1
+      RETURN
+  900 IERR = 1
+      RETURN
+  910 IERR = 2
+      RETURN
+      END
+C
+C     GREGORIAN DATE OF JULIAN DAY NUMBER JD (ALL ZERO FOR JD .LT. 0)
+      SUBROUTINE JDCAL(JD, IY, IM, ID)
+      INTEGER JD, IY, IM, ID, L, N, I, J, K
+      COMMON /DCNT/ NFWD, NREV
+      IY = 0
+      IM = 0
+      ID = 0
+      IF (JD .LT. 0) RETURN
+      L = JD + 68569
+      N = 4 * L / 146097
+      L = L - (146097 * N + 3) / 4
+      I = 4000 * (L + 1) / 1461001
+      L = L - 1461 * I / 4 + 31
+      J = 80 * L / 2447
+      K = L - 2447 * J / 80
+      L = J / 11
+      J = J + 2 - 12 * L
+      I = 100 * (N - 49) + I + L
+      IY = I
+      IM = J
+      ID = K
+      NREV = NREV + 1
+      RETURN
+      END
+C
+C     DAY OF THE WEEK, 0 = SUNDAY .. 6 = SATURDAY (JD .GE. -1)
+      INTEGER FUNCTION IDOW(JD)
+      INTEGER JD
+      IDOW = MOD(JD + 1, 7)
+      RETURN
+      END
+C
+C     DAY NUMBER WITHIN THE YEAR, 0 FOR AN INVALID DATE
+      INTEGER FUNCTION DAYOFY(IY, IM, ID)
+      INTEGER IY, IM, ID, MDAYS, N
+      DAYOFY = 0
+      IF (IM .LT. 1 .OR. IM .GT. 12) RETURN
+      IF (ID .LT. 1 .OR. ID .GT. MDAYS(IY, IM)) RETURN
+      N = ID
+      DO 10 I = 1, IM - 1
+         N = N + MDAYS(IY, I)
+   10 CONTINUE
+      DAYOFY = N
+      RETURN
+      END
+C
+C     CONVERSION COUNTS, OPTIONALLY CLEARED AFTERWARDS
+      SUBROUTINE DCOUNT(NF, NR, IRESET)
+      INTEGER NF, NR, IRESET
+      COMMON /DCNT/ NFWD, NREV
+      NF = NFWD
+      NR = NREV
+      IF (IRESET .NE. 0) THEN
+         NFWD = 0
+         NREV = 0
+      END IF
+      RETURN
+      END

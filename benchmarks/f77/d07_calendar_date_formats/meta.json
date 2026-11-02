@@ -1,0 +1,6 @@
+{
+  "id": "d07_calendar_date_formats",
+  "difficulty": "medium",
+  "features": ["data_statement", "array_custom_bounds", "integer_division", "intrinsic_semantics", "format_statement", "io_formatted", "character_star", "character_substring", "arg_output", "do_labeled", "logical_dotted", "fixed_form_source", "if_logical_single", "save_statement"],
+  "notes": "Internal WRITE into a CHARACTER variable with I4.4/I2.2 zero filled fields and a day-of-week formula built on truncating integer division."
+}

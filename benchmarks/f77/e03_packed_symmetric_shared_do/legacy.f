@@ -1,0 +1,68 @@
+C     SYMPAK - PACKED STORAGE UTILITIES FOR SYMMETRIC MATRICES
+C
+C     ONLY THE UPPER TRIANGLE OF A SYMMETRIC N BY N MATRIX IS KEPT,
+C     COLUMN BY COLUMN, IN A VECTOR AP OF LENGTH N*(N+1)/2:
+C        AP = A(1,1), A(1,2), A(2,2), A(1,3), A(2,3), A(3,3), ...
+C
+C     PKIDX   POSITION OF A(I,J) IN THE PACKED VECTOR
+C     PACKUT  FULL (LDA BY N) ARRAY -> PACKED VECTOR
+C     UNPKSY  PACKED VECTOR -> FULL ARRAY, BOTH TRIANGLES FILLED
+C     SPMV    Y = A*X WITH A GIVEN IN PACKED FORM
+C     NTRIP   COUNTS NON-DECREASING INDEX TRIPLES WITH A SMALL SUM
+C
+C     NESTED LOOPS HERE SHARE A SINGLE TERMINAL STATEMENT.
+C
+      INTEGER FUNCTION PKIDX(I, J)
+      INTEGER I, J, II, JJ
+      II = MIN0(I, J)
+      JJ = MAX0(I, J)
+      PKIDX = JJ*(JJ-1)/2 + II
+      RETURN
+      END
+C
+      SUBROUTINE PACKUT(N, A, LDA, AP)
+      INTEGER N, LDA, I, J, K
+      DOUBLE PRECISION A(LDA,*), AP(*)
+      K = 0
+      DO 20 J = 1, N
+      DO 20 I = 1, J
+      K = K + 1
+   20 AP(K) = A(I,J)
+      RETURN
+      END
+C
+      SUBROUTINE UNPKSY(N, AP, A, LDA)
+      INTEGER N, LDA, I, J, K
+      DOUBLE PRECISION A(LDA,*), AP(*)
+      K = 0
+      DO 20 J = 1, N
+      DO 20 I = 1, J
+      K = K + 1
+      A(I,J) = AP(K)
+   20 A(J,I) = AP(K)
+      RETURN
+      END
+C
+      SUBROUTINE SPMV(N, AP, X, Y)
+C     Y = A*X, EVERY ELEMENT OF A REACHED THROUGH PKIDX
+      INTEGER N, I, J, PKIDX
+      DOUBLE PRECISION AP(*), X(N), Y(N)
+      DO 30 I = 1, N
+      Y(I) = 0.0D0
+      DO 30 J = 1, N
+   30 Y(I) = Y(I) + AP(PKIDX(I,J)) * X(J)
+      RETURN
+      END
+C
+      INTEGER FUNCTION NTRIP(N, LIM)
+C     NUMBER OF (I,J,K) WITH 1 .LE. I .LE. J .LE. K .LE. N AND
+C     I + J + K .LE. LIM
+      INTEGER N, LIM, I, J, K
+      NTRIP = 0
+      DO 30 I = 1, N
+      DO 30 J = I, N
+      DO 30 K = J, N
+      IF (I + J + K .LE. LIM) NTRIP = NTRIP + 1
+   30 CONTINUE
+      RETURN
+      END

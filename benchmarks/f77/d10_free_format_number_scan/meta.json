@@ -1,0 +1,6 @@
+{
+  "id": "d10_free_format_number_scan",
+  "difficulty": "hard",
+  "features": ["goto_computed", "goto_unconditional", "alternate_return", "double_precision", "exponent_literal_d", "array_adjustable", "intrinsic_specific", "character_star", "character_substring", "arg_output", "do_labeled", "if_logical_single", "logical_dotted", "fixed_form_source"],
+  "notes": "A hand-written number scanner: computed GO TO on character class, two alternate returns, a DO loop left by GO TO whose variable is used afterwards, and a net decimal scale applied with an integer power."
+}

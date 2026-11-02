@@ -1,0 +1,6 @@
+{
+  "id": "e01_collatz_euclid_goto",
+  "difficulty": "medium",
+  "features": ["goto_unconditional", "if_arithmetic", "if_logical_single", "integer_division", "intrinsic_semantics", "intrinsic_specific", "arg_output", "array_assumed_size", "implicit_typing", "logical_dotted", "fixed_form_source"],
+  "notes": "Collatz and Euclid written only with GOTO and arithmetic IF; MOD and integer division on negative operands, outputs returned as tuples."
+}

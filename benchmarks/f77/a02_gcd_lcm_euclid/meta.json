@@ -1,0 +1,18 @@
+{
+  "id": "a02_gcd_lcm_euclid",
+  "difficulty": "easy",
+  "features": [
+    "fixed_form_source",
+    "goto_unconditional",
+    "if_logical_single",
+    "logical_dotted",
+    "integer_division",
+    "intrinsic_semantics",
+    "intrinsic_specific",
+    "arg_output",
+    "do_labeled",
+    "array_assumed_size",
+    "implicit_typing"
+  ],
+  "notes": "Euclid loop built from GO TO, MOD with negative operands, and M/G*N where the division order and truncation matter; REDUCE rewrites both dummies."
+}

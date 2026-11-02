@@ -1,0 +1,58 @@
+C     PRIME NUMBER UTILITIES: TRIAL DIVISION AND THE SIEVE OF
+C     ERATOSTHENES
+C
+C     ISPRIM - TRUE WHEN N IS PRIME (N < 2 IS NEVER PRIME)
+      LOGICAL FUNCTION ISPRIM(N)
+      INTEGER N, I, LIM
+      ISPRIM = .FALSE.
+      IF (N .LT. 2) RETURN
+      ISPRIM = .TRUE.
+      IF (N .EQ. 2) RETURN
+      IF (MOD(N, 2) .EQ. 0) THEN
+         ISPRIM = .FALSE.
+         RETURN
+      END IF
+C     ONLY ODD DIVISORS UP TO THE SQUARE ROOT NEED TO BE TRIED
+      LIM = INT(SQRT(FLOAT(N)))
+      DO 10 I = 3, LIM, 2
+         IF (MOD(N, I) .EQ. 0) THEN
+            ISPRIM = .FALSE.
+            RETURN
+         END IF
+   10 CONTINUE
+      RETURN
+      END
+C
+C     SIEVE - ISP(I) IS SET TO TRUE EXACTLY WHEN I IS PRIME, FOR
+C     I = 1..N, AND NP RETURNS HOW MANY PRIMES THERE ARE.
+      SUBROUTINE SIEVE(N, ISP, NP)
+      INTEGER N, NP
+      LOGICAL ISP(N)
+      INTEGER I, J
+      NP = 0
+      IF (N .LT. 1) RETURN
+      ISP(1) = .FALSE.
+      DO 10 I = 2, N
+         ISP(I) = .TRUE.
+   10 CONTINUE
+      DO 30 I = 2, N
+         IF (.NOT. ISP(I)) GO TO 30
+         NP = NP + 1
+C        CROSS OUT THE MULTIPLES OF I, STARTING AT I*I
+         DO 20 J = I*I, N, I
+            ISP(J) = .FALSE.
+   20    CONTINUE
+   30 CONTINUE
+      RETURN
+      END
+C
+C     NPRIME - NUMBER OF PRIMES <= N FOR N <= 1000, -1 IF N IS LARGER
+      INTEGER FUNCTION NPRIME(N)
+      INTEGER N, NP
+      LOGICAL WORK(1000)
+      NPRIME = -1
+      IF (N .GT. 1000) RETURN
+      CALL SIEVE(N, WORK, NP)
+      NPRIME = NP
+      RETURN
+      END

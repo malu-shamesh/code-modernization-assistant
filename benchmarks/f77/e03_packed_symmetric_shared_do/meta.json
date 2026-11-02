@@ -1,0 +1,6 @@
+{
+  "id": "e03_packed_symmetric_shared_do",
+  "difficulty": "medium",
+  "features": ["do_shared_terminal", "do_labeled", "array_multidim", "array_adjustable", "array_assumed_size", "double_precision", "exponent_literal_d", "integer_division", "intrinsic_specific", "logical_dotted", "if_logical_single", "arg_output", "fixed_form_source"],
+  "notes": "Two and three DO loops share one terminal label (even an assignment statement), with column-major packed indexing through a leading dimension."
+}

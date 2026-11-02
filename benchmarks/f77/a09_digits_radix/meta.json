@@ -1,0 +1,23 @@
+{
+  "id": "a09_digits_radix",
+  "difficulty": "medium",
+  "features": [
+    "fixed_form_source",
+    "character_star",
+    "character_substring",
+    "data_statement",
+    "integer_division",
+    "intrinsic_semantics",
+    "intrinsic_specific",
+    "goto_unconditional",
+    "format_statement",
+    "io_formatted",
+    "arg_output",
+    "logical_dotted",
+    "if_logical_single",
+    "do_labeled",
+    "implicit_typing",
+    "save_statement"
+  ],
+  "notes": "CHARACTER*16 results are blank padded and built by substring assignment, MOD/ISIGN with negative numbers, INDEX-based parsing, and an exact A16 output field."
+}

@@ -1,0 +1,6 @@
+{
+  "id": "d04_caesar_vigenere_cipher",
+  "difficulty": "medium",
+  "features": ["character_star", "character_substring", "parameter_statement", "intrinsic_semantics", "array_assumed_size", "arg_output", "do_labeled", "if_logical_single", "logical_dotted", "fixed_form_source"],
+  "notes": "MOD takes the sign of the dividend so negative shifts need a fix-up; the Vigenere key advances only on letters and is capped at 20 key letters."
+}

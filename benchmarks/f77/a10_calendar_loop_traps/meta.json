@@ -1,0 +1,22 @@
+{
+  "id": "a10_calendar_loop_traps",
+  "difficulty": "hard",
+  "features": [
+    "fixed_form_source",
+    "block_data",
+    "common_block",
+    "data_statement",
+    "integer_division",
+    "goto_computed",
+    "if_arithmetic",
+    "goto_unconditional",
+    "do_labeled",
+    "intrinsic_semantics",
+    "intrinsic_specific",
+    "arg_output",
+    "implicit_typing",
+    "logical_dotted",
+    "if_logical_single"
+  ],
+  "notes": "Calendar formulas that rely on truncating division of negative numerators, the DO variable value after the loop (start + trips*step, also for zero trips), computed GO TO falling through, arithmetic IF, and COMMON state initialised by BLOCK DATA."
+}
